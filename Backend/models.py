@@ -1,6 +1,6 @@
 import sqlite3
 import pandas as pd
-from config import db, db_path
+from Backend.config import db, db_path
 from datetime import datetime, date
 
 class User(db.Model):

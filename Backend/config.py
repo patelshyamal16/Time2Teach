@@ -4,9 +4,12 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 # Use fixed absolute paths for database and frontend folders
-db_path = r'c:/Shyamal Patel/Time2Teach/Backend/Database/Collection.db'
-static_folder = r'c:/Shyamal Patel/Time2Teach/Frontend/static'
-template_folder = r'c:/Shyamal Patel/Time2Teach/Frontend/templates'
+# Get the base directory (i.e., the folder where config.py lives)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+db_path = os.path.join(BASE_DIR, 'Database', 'Collection.db')
+static_folder = os.path.join(BASE_DIR, '..', 'Frontend', 'static')
+template_folder = os.path.join(BASE_DIR, '..', 'Frontend', 'templates')
 
 print(f"Using database path: {db_path}")
 secret_key = os.environ.get('FLASK_SECRET_KEY', 'Ganesh70')  # Fallback to a default secret key

@@ -392,10 +392,18 @@ def generate_report():
             df_reference = pd.DataFrame(reference_data)
 
             # Create Excel file with two sheets
-            reports_dir = r'c:/Shyamal Patel/Time2Teach/Frontend/Reports'
+            # Get the base directory where this script is located
+            BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+            # Define reports directory relative to Backend/config.py
+            reports_dir = os.path.join(BASE_DIR, '..', 'Frontend', 'Reports')
+
+            # Ensure the directory exists
             print(f"Reports directory path: {os.path.abspath(reports_dir)}")
             if not os.path.exists(reports_dir):
                 os.makedirs(reports_dir)
+
+            # Build full report file path
             report_path = os.path.join(reports_dir, 'Teaching Percentage.xlsx')
             print(f"Report file path: {os.path.abspath(report_path)}")
 
@@ -500,7 +508,11 @@ def generate_report():
             return jsonify({'error': error_message}), 500
 
     else:  # GET method to download the file
-        report_path = r'c:/Shyamal Patel/Time2Teach/Frontend/Reports/Teaching Percentage.xlsx'
+        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+        reports_dir = os.path.join(BASE_DIR, '..', 'Frontend', 'Reports')
+        os.makedirs(reports_dir, exist_ok=True)
+
+        report_path = os.path.join(reports_dir, 'Teaching Percentage.xlsx')
         if not os.path.exists(report_path):
             return "Report not found", 404
         return send_file(report_path, as_attachment=True, download_name='Teaching Percentage.xlsx')
