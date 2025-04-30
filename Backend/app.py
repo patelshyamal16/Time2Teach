@@ -1,6 +1,6 @@
 import os
 import pandas as pd
-from config import app, db, db_path
+from Backend.config import app, db, db_path
 from flask_cors import CORS
 from openpyxl.styles import Border, Side
 from openpyxl.utils import get_column_letter
