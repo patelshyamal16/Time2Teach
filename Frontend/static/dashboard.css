@@ -1,0 +1,364 @@
+/* Body and general styles */
+body {
+    font-family: 'Merriweather', serif;
+    margin: 20px;
+    padding: 40px;
+    background-color: rgb(241, 230, 214);
+}
+
+/* Header and title */
+.header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.circle {
+    width: 100px;
+    height: 100px;
+    background-color: #1b172b;
+    border-radius: 50%;
+    color: rgb(255, 157, 9);
+    font-weight: bold;
+    font-size: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.title-text {
+    font-size: 40px;
+    color: rgb(255, 157, 9);
+    font-weight: bold;
+}
+
+.orange-color.circle-2 {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid rgb(0, 0, 0);
+    background-color: #1b172b;
+    font-weight: bold;
+    font-size: 40px;
+    line-height: 40px;
+    user-select: none;
+    color: rgb(255, 157, 9);
+}
+
+/* Dashboard text */
+.dashboard-text {
+    margin-top: 10px;
+    font-size: 30px;
+    font-weight: 600;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+/* Horizontal rule */
+hr.dashboard-hr{
+    margin: 5px 10px;
+    border: none;
+    border-top: 5px solid rgb(0, 0, 0);
+    width: 100%;
+}
+
+/* Container and layout */
+.flex-gap-20 {
+    display: flex;
+    gap: 20px;
+}
+
+.container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.15);
+    max-width: 75%;
+    max-height: 600px;
+    margin: auto;
+    margin-top: 20px;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    height: auto;
+    overflow-y: auto;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* smooth scrolling on iOS */
+}
+
+/* Member box */
+.member-box {
+    border: 1px solid #7a7a7a;
+    border-radius: 75%;
+    padding: 10px 15px;
+    width: 400px;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: sticky;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    background-color: #f9f9f9;
+    margin-bottom: 15px;
+}
+
+#generateReportBtn {
+    background-color: #f9f9f9;
+    color: black;
+    font-weight: bold;
+}
+
+#generateReportBtn:hover {
+    background-color: #1b172b;
+    color: rgb(255, 157, 9);
+}
+
+.member-box:hover {
+    background-color: #1b172b;
+    color: rgb(255, 157, 9);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.member-name {
+    font-size: 80px;
+    font-weight: 500;
+}
+
+.add-box {
+    border: 1px solid #7a7a7a;
+    border-radius: 75%;
+    padding: 10px 15px;
+    width: 400px;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: sticky;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    font-size: 40px;
+    font-weight: 500px;
+    color: #1b172b;
+}
+
+.add-box:hover {
+    background-color: rgb(255, 157, 9);
+    color: #1b172b;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Modal styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 800;
+    left: 0;
+    top: -150px;
+    width: 100%;
+    height: 120%;
+    overflow: scroll;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content.modal-member {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 90%;
+    position: relative;
+    overflow-y: auto; /* enable vertical scroll if content overflows */
+    box-sizing: border-box;
+}
+
+.modal-content.modal-add {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 600px;
+    position: relative;
+    overflow-y: auto; /* enable vertical scroll if content overflows */
+    box-sizing: border-box;
+}
+
+.modal-content.modal-course {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 600px;
+    position: relative;
+    overflow-y: auto; /* enable vertical scroll if content overflows */
+    box-sizing: border-box;
+}
+
+.close-btn {
+    color: #000000;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    position: absolute;
+    right: 50px;
+    top: 25px;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: rgb(255, 167, 53);
+    text-decoration: none;
+}
+
+/* Calendar buttons */
+#prev-month, #next-month {
+    cursor: pointer;
+    background-color: rgb(0, 0, 0);
+    color: #ffffff;
+    border: none;
+    font-size: 1.2rem;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+#prev-month:hover, #next-month:hover {
+    background-color: rgb(255, 157, 9);
+    color: white;
+}
+
+#calendar-update-wrapper{
+    box-shadow: 0 0 10px rgba(0,0,0,0.15);
+    border-radius: 8px;
+    padding: 10px 10px;
+    width: 500px;
+    max-height: 640px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+#update-container{
+    box-shadow: 0 0 10px rgba(0,0,0,0.15);
+    border-radius: 8px;
+    padding: 10px 15px;
+    width: auto;
+    height: auto;
+    max-height: 40%;
+    background-color: #f9f9f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    overflow-y: auto;
+}
+
+#update-container > div:first-child {
+    width: auto;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+    align-items: center;
+}
+
+/* Calendar container and child elements styles */
+#calendar-container {
+    box-shadow: 0 0 10px rgba(0,0,0,0.15);
+    border-radius: 8px;
+    padding: 10px 15px;
+    width: auto;
+    height: auto;
+    margin-bottom: 50px;
+    background-color: #f9f9f9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+#calendar-container > div:first-child {
+    width: auto;
+    text-align: center;
+    font-weight: bold;
+    font-size: 2rem;
+    margin-bottom: 5px;
+}
+
+hr.calendar-hr {
+    margin: 2px 0;
+    border: none;
+    border-top: 5px solid rgb(0, 0, 0);
+    width: 100%;
+}
+
+#calendar {
+    width: 100%;
+    height: 100%;
+}
+
+#calendar-header {
+    width: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+#month-year {
+    flex-grow: 1;
+    text-align: center;
+    margin-top: 2px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#calendar-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+#calendar-body {
+    text-align: center;
+}
+
+/* New styles for moved inline styles */
+
+/* iframe styles */
+.modal-iframe {
+    width: 100%;
+    height: 1000px;
+    border: none;
+}
+
+/* calendar cell today styles */
+.calendar-today {
+    background-color: rgb(255, 157, 9);
+    color: black;
+    font-weight: bold;
+    border-radius: 8%;
+}
+
+.orange-color {
+    color: rgb(255, 157, 9);
+}
+
+.black-color {
+    color: black;
+}

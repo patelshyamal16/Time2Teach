@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Info</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='user_info.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <div style="font-size: 2rem; font-weight: bold;">
+                Name: {{ user.first_name }} {{ user.last_name }}, {{ Percent }}%
+            </div>
+            <div>
+                <button type="button" id="sendEmailBtn" style="padding: 8px 16px; font-size: 1rem; cursor: pointer; margin-right: 10px; background-color: #007bff; color: white;">
+                    Send
+                </button>
+                <button type="button" id="editUserBtn" style="padding: 8px 16px; font-size: 1rem; cursor: pointer; margin-right: 10px;">
+                    Edit
+                </button>
+                <button type="button" id="deleteUserBtn" style="padding: 8px 16px; font-size: 1rem; cursor: pointer; background-color: #dc3545; color: white;">
+                    Delete
+                </button>
+                <button type="button" id="addCourseBtn" style="padding: 8px 16px; font-size: 1rem; cursor: pointer;">
+                    Add Course
+                </button>
+            </div>
+        </div>
+
+        <div style="text-align: center; font-size: 2rem; font-weight: 600;">
+            Total
+        </div>
+
+        <div class="table-responsive" style="text-align: center;">
+            <hr class="line1-hr" />
+            <table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse; align-items: center; margin-bottom: 15px; text-align: center;">
+                <thead style="background-color: #f2f2f2;">
+                    <tr>
+                        <th>Sum of Courses</th>
+                        <th>APPE (h)</th>
+                        <th>Research Electives</th>
+                        <th>Proctoring</th>
+                        <th>Grading</th>
+                        <th>Total sum of Courses</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if user %}
+                    <tr>
+                        <td>{{ sum_of_courses }}</td>
+                        <td>{{ user.total_appe }}</td>
+                        <td>{{ user.research_electives }}</td>
+                        <td>{{ user.proctoring }}</td>
+                        <td>{{ user.grading }}</td>
+                        <td>{{ Total }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6">No data added yet.</td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div> 
+
+        <div style="text-align: center; font-size: 2rem; font-weight: 600; margin-top: 15px;">
+            Courses
+        </div>
+
+        <hr class="line-hr" />
+
+        <div class="table-responsive">
+            <table border="1" cellpadding="8" cellspacing="0" style="width: 100%; border-collapse: collapse; text-align: center;">
+                <thead style="background-color: #f2f2f2;">
+                    <tr>
+                        <th>Course</th>
+                        <th>Enroll</th>
+                        <th>Didactic Credit</th>
+                        <th>Lab Credit</th>
+                        <th>Coordinator (Y or N)</th>
+                        <th>Clinical Lead (Y/N/NA)</th>
+                        <th>Lecture Total</th>
+                        <th>Lab Total</th>
+                        <th>Lecture Faculty</th>
+                        <th>Lab Design</th>
+                        <th>Lab Proctor</th>
+                        <th>Total</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for course in user_courses %}
+                    <tr data-course-id="{{ course.course_id }}">
+                        <td contenteditable="false" class="editable" data-field="course_name">{{ course.course_name }}</td>
+                        <td contenteditable="false" class="editable" data-field="enroll">{{ course.enroll }}</td>
+                        <td contenteditable="false" class="editable" data-field="didactic_credit">{{ course.didactic_credit }}</td>
+                        <td contenteditable="false" class="editable" data-field="lab_credit">{{ course.lab_credit }}</td>
+                        <td contenteditable="false" class="editable" data-field="coordinator">{{ course.coordinator }}</td>
+                        <td contenteditable="false" class="editable" data-field="clinical_lead">{{ course.clinical_lead }}</td>
+                        <td contenteditable="false" class="editable" data-field="lecture_total">{{ course.lecture_total }}</td>
+                        <td contenteditable="false" class="editable" data-field="lab_total">{{ course.lab_total }}</td>
+                        <td contenteditable="false" class="editable" data-field="lecture_faculty">{{ course.lecture_faculty }}</td>
+                        <td contenteditable="false" class="editable" data-field="lab_design">{{ course.lab_design }}</td>
+                        <td contenteditable="false" class="editable" data-field="lab_proctor">{{ course.lab_proctor }}</td>
+                        <td>{{ course.total }}</td>
+                        <td>
+                            <button class="edit-btn">Edit</button>
+                            <button class="save-btn" style="display:none;">Save</button>
+                            <button class="cancel-btn" style="display:none;">Cancel</button>
+                            <button class="delete-btn">Delete</button>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="12">No courses added yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    <script>
+        document.getElementById('addCourseBtn').addEventListener('click', function() {
+            window.parent.postMessage({
+                action: 'openCourseModal',
+                userId: '{{ user.user_id }}'
+            }, '*');
+        });
+    </script>
+
+    <script>
+        document.getElementById('editUserBtn').addEventListener('click', function() {
+            window.parent.postMessage({
+                action: 'openUserEditModal',
+                userId: '{{ user.user_id }}'
+            }, '*');
+        });
+
+        document.getElementById('sendEmailBtn').addEventListener('click', function() {
+            const userId = '{{ user.user_id }}';
+            fetch(`/send_survey_email/${userId}`, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        alert(data.message);
+                    } else if (data.error) {
+                        alert('Error: ' + data.error);
+                    } else {
+                        alert('Email sent.');
+                    }
+                })
+                .catch(() => {
+                    alert('Failed to send email.');
+                });
+        });
+
+        document.getElementById('deleteUserBtn').addEventListener('click', function() {
+            if (!confirm('Are you sure you want to delete this user and all their courses?')) {
+                return;
+            }
+            const userId = '{{ user.user_id }}';
+            fetch(`/delete_user/${userId}`, { method: 'DELETE' })
+                .then(response => {
+                    if (response.ok) {
+                        alert('User and their courses deleted successfully.');
+                         window.parent.postMessage({ action: 'closeUserInfoModal' }, '*');
+                    } else {
+                        alert('Failed to delete user.');
+                    }
+                })
+                .catch(() => {
+                    alert('Failed to delete user.');
+                });
+        });
+    </script>
+    <script>
+        // Inline JavaScript for edit, save, cancel, delete buttons in user_info.html course table
+
+        document.addEventListener('DOMContentLoaded', function() {
+            function ajaxRequest(method, url, data, callback) {
+                const xhr = new XMLHttpRequest();
+                xhr.open(method, url, true);
+                xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+                xhr.onload = function() {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        callback(null, JSON.parse(xhr.responseText));
+                    } else {
+                        callback(new Error('Request failed: ' + xhr.status));
+                    }
+                };
+                xhr.onerror = function() {
+                    callback(new Error('Request failed'));
+                };
+                xhr.send(data ? JSON.stringify(data) : null);
+            }
+
+            function toggleEditMode(row, editing) {
+                const editableCells = row.querySelectorAll('td.editable');
+                editableCells.forEach(cell => {
+                    cell.contentEditable = editing;
+                    if (editing) {
+                        cell.classList.add('editing');
+                    } else {
+                        cell.classList.remove('editing');
+                    }
+                });
+                row.querySelector('.edit-btn').style.display = editing ? 'none' : 'inline-block';
+                row.querySelector('.save-btn').style.display = editing ? 'inline-block' : 'none';
+                row.querySelector('.cancel-btn').style.display = editing ? 'inline-block' : 'none';
+            }
+
+            function getCourseData(row) {
+                const data = {};
+                const editableCells = row.querySelectorAll('td.editable');
+                editableCells.forEach(cell => {
+                    const field = cell.getAttribute('data-field');
+                    data[field] = cell.innerText.trim();
+                });
+                return data;
+            }
+
+            function setCourseData(row, data) {
+                const editableCells = row.querySelectorAll('td.editable');
+                editableCells.forEach(cell => {
+                    const field = cell.getAttribute('data-field');
+                    if (data[field] !== undefined) {
+                        cell.innerText = data[field];
+                    }
+                });
+                // Update total cell
+                const totalCell = row.querySelector('td:last-child');
+                if (data.course_total !== undefined) {
+                    totalCell.innerText = data.course_total;
+                }
+            }
+
+            document.querySelectorAll('table tbody tr[data-course-id]').forEach(row => {
+                const editBtn = row.querySelector('.edit-btn');
+                const saveBtn = row.querySelector('.save-btn');
+                const cancelBtn = row.querySelector('.cancel-btn');
+                const deleteBtn = row.querySelector('.delete-btn');
+
+                let originalData = {};
+
+                editBtn.addEventListener('click', () => {
+                    originalData = getCourseData(row);
+                    toggleEditMode(row, true);
+                });
+
+                cancelBtn.addEventListener('click', () => {
+                    setCourseData(row, originalData);
+                    toggleEditMode(row, false);
+                });
+
+                saveBtn.addEventListener('click', () => {
+                    const courseId = row.getAttribute('data-course-id');
+                    const updatedData = getCourseData(row);
+
+                    // Validate numeric fields
+                    const numericFields = ['didactic_credit', 'lab_credit', 'lecture_total', 'lab_total', 'lecture_faculty', 'lab_design', 'lab_proctor'];
+                    for (const field of numericFields) {
+                        if (isNaN(updatedData[field]) || updatedData[field] === '') {
+                            alert(`Invalid value for ${field.replace('_', ' ')}`);
+                            return;
+                        }
+                    }
+
+                    ajaxRequest('POST', `/update_course/${courseId}`, updatedData, (err, response) => {
+                        if (err) {
+                            alert('Failed to update course: ' + err.message);
+                            return;
+                        }
+                    setCourseData(row, response);
+                    // Instead of updating totals here, send message to parent to refresh iframe
+                    window.parent.postMessage({ action: 'refreshUserInfo', userId: '{{ user.user_id }}' }, '*');
+                    toggleEditMode(row, false);
+                    });
+                });
+
+                deleteBtn.addEventListener('click', () => {
+                    if (!confirm('Are you sure you want to delete this course?')) {
+                        return;
+                    }
+                    const courseId = row.getAttribute('data-course-id');
+                    ajaxRequest('DELETE', `/delete_course/${courseId}`, null, (err, response) => {
+                        if (err) {
+                            alert('Failed to delete course: ' + err.message);
+                            return;
+                        }
+                        // Remove row from table
+                        row.remove();
+                        // Update totals in the Total table
+                        document.querySelector('table.table-responsive:nth-of-type(1) tbody tr td:nth-child(1)').innerText = response.sum_of_courses;
+                        document.querySelector('table.table-responsive:nth-of-type(1) tbody tr td:nth-child(6)').innerText = response.Total;
+                        // Update percentage display
+                        const nameDiv = document.querySelector('.container > div > div');
+                        if (nameDiv) {
+                            const nameText = nameDiv.innerText;
+                            const newNameText = nameText.replace(/, \\d+%/, `, ${response.Percent}%`);
+                            nameDiv.innerText = newNameText;
+                        }
+                    });
+                });
+            });
+
+            // Add postMessage listener to refresh page on receiving message from pop-up
+            window.addEventListener('message', function(event) {
+                if (event.data && event.data.action === 'refreshUserInfo') {
+                    location.reload();
+                }
+            });
+        });
+    </script>
+</div>
+
+</body>
+</html>

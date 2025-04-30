@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Information</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>User Information</h2>
+        <form method="POST" action="/submit_user" id="userForm">
+            <div class="form-group">
+                <label for="first_name">First Name</label>
+                <input name="first_name" id="first_name" required>
+            </div>
+            <div class="form-group">
+                <label for="last_name">Last Name</label>
+                <input name="last_name" id="last_name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input name="email" id="email" type="email" required>
+            </div>
+            <div class="form-group">
+                <label>Pick one or Both?</label>
+            </div>
+            <div class="form-group toggle-buttons-container">
+                <button type="button" id="clinicalBtn" class="toggle-btn">Clinical Appe</button>
+                <button type="button" id="academicBtn" class="toggle-btn">Academic Appe</button>
+            </div>
+            <div class="form-group clinical-group" style="display:none;">
+                <label>Clinical Appe</label>
+                <input name="clinical_appe" id="clinical_appe" type="number" value="0">
+            </div>
+            <div class="form-group academic-group" style="display:none;">
+                <label>Academic Appe</label>
+                <input name="academic_appe" id="academic_appe" type="number" value="0">
+            </div>
+            <div class="form-group">
+                <label for="research_electives">Research Electives</label>
+                <input name="research_electives" id="research_electives" type="number" value="0" required>
+            </div>
+            <div class="form-group">
+                <label for="proctoring">Proctoring</label>
+                <input name="proctoring" id="proctoring" type="number" step="0.01" value="0" required>
+            </div>
+            <div class="form-group">
+                <label for="grading">Grading</label>
+                <input name="grading" id="grading" type="number" value="0" required>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+        <script>
+            document.getElementById('clinicalBtn').addEventListener('click', function() {
+                const clinicalGroup = document.querySelector('.clinical-group');
+                if (clinicalGroup.style.display === 'none') {
+                    clinicalGroup.style.display = 'block';
+                    this.classList.add('active');
+                } else {
+                    clinicalGroup.style.display = 'none';
+                    this.classList.remove('active');
+                }
+            });
+            document.getElementById('academicBtn').addEventListener('click', function() {
+                const academicGroup = document.querySelector('.academic-group');
+                if (academicGroup.style.display === 'none') {
+                    academicGroup.style.display = 'block';
+                    this.classList.add('active');
+                } else {
+                    academicGroup.style.display = 'none';
+                    this.classList.remove('active');
+                }
+            });
+        </script>
+    </div>
+</body>
+</html>

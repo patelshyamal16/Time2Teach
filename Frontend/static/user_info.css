@@ -1,0 +1,160 @@
+/* style.css */
+body {
+    font-family: 'Merriweather', serif;
+    margin: 20px;
+    padding: 40px;
+    background-color: #f2f2f2;
+    font-size: 1.5rem;
+}
+
+.container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.15);
+    width: auto;
+    margin: auto;
+}
+
+h2 {
+    color: #2d3e50;
+    margin-bottom: 20px;
+}
+
+h3 {
+    color: #2d3e50;
+    margin-top: 30px;
+}
+
+hr.line-hr{
+    margin: 2px 0;
+    border: none;
+    border-top: 5px solid rgb(0, 0, 0);
+    width: 100%;
+}
+
+hr.line1-hr{
+    margin: 2px 0;
+    border: none;
+    border-top: 5px solid rgb(0, 0, 0);
+    width: 100%;
+}
+.form-group,
+.section {
+    margin-bottom: 15px;
+}
+
+label,
+.label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+input {
+    width: 100%;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+button {
+    background-color: #f2f2f2;
+    color: black;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+}
+
+button:hover {
+    background-color: #1b172b;
+    color: rgb(255, 157, 9);
+}
+
+a {
+    text-decoration: none;
+    color: #007BFF;
+}
+
+/* Added color classes for title-text letters */
+.orange-color {
+    color: rgb(255, 157, 9);
+}
+
+.black-color {
+    color: black;
+}
+
+/* Style for toggle buttons container to place buttons side by side */
+.toggle-buttons-container {
+    display: flex;
+    gap: 5px;
+    
+}
+
+/* Style for toggle buttons */
+.toggle-btn {
+    padding: 8px 10px;
+    background-color: #f2f2f2;
+    border: 1px solid #ccc;
+    color: black;
+    width: 100%;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.toggle-btn:hover {
+    background-color: rgb(255, 157, 9);
+    color: #1b172b;
+}
+
+/* Active state for toggle buttons */
+.toggle-btn.active {
+    background-color: #1b172b;
+    color:rgb(255, 157, 9);
+}
+
+input[type="number"],
+input[type="email"],
+input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+/* Responsive table container to enable horizontal scrolling */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* smooth scrolling on iOS */
+}
+
+/* Table styles for better layout */
+.table-responsive table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    table-layout: auto;
+    min-width: 600px; /* minimum width to prevent too narrow columns */
+}
+
+.table-responsive th,
+.table-responsive td {
+    padding: 8px;
+    border: 1px solid #ddd;
+    white-space: nowrap; /* prevent text wrapping */
+}
+
+.table-responsive thead {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}

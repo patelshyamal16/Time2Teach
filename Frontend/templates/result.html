@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Submission Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Submission Successful!</h2>
+
+        <div class="section">
+            <div class="label">Name:</div>
+            <div>{{ user.first_name }} {{ user.last_name }}</div>
+        </div>
+
+        <div class="section">
+            <div class="label">Email:</div>
+            <div>{{ user.email }}</div>
+        </div>
+
+        <hr>
+
+            <h3>Course Information</h3>
+
+            <div class="section"><span class="label">Enroll >30:</span> {{ course.enroll }}</div>
+            <div class="section"><span class="label">Didactic Credit:</span> {{ course.didactic_credit }}</div>
+            <div class="section"><span class="label">Lab Credit:</span> {{ course.lab_credit }}</div>
+            <div class="section"><span class="label">Coordinator:</span> {{ course.coordinator }}</div>
+            <div class="section"><span class="label">Clinical Lead:</span> {{ course.clinical_lead }}</div>
+            <div class="section"><span class="label">Lecture Total:</span> {{ course.lecture_total }}</div>
+            <div class="section"><span class="label">Lab Total:</span> {{ course.lab_total }}</div>
+            <div class="section"><span class="label">Lecture Faculty:</span> {{ course.lecture_faculty }}</div>
+            <div class="section"><span class="label">Lab Design:</span> {{ course.lab_design }}</div>
+            <div class="section"><span class="label">Lab Proctor:</span> {{ course.lab_proctor }}</div>
+
+        <hr>
+
+        <div class="section">
+            <h3>Total Workload: {{ course.total }}</h3>
+        </div>
+
+        <br>
+        <a href="/">← Submit Another</a>
+    </div>
+</body>
+</html>

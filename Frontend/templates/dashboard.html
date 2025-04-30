@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Dashboard - Time2Teach</title>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}" />
+</head>
+<body>
+    <div class="header">
+        <div class="circle">T2T</div>
+        <div class="title-text">
+            <span class="orange-color">T</span>
+            <span class="black-color">i</span>
+            <span class="black-color">m</span>
+            <span class="black-color">e</span>
+            <span class="orange-color circle-2">2</span>
+            <span class="orange-color">T</span>
+            <span class="black-color">e</span>
+            <span class="black-color">a</span>
+            <span class="black-color">c</span>
+            <span class="black-color">h</span>
+        </div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 20px; justify-content: center;">
+        <div class="dashboard-text">Dashboard</div>
+        <button id="generateReportBtn" style="padding: 8px 16px; font-size: 1rem; cursor: pointer; border: none; border-radius: 4px; align-items: center;">
+            Generate Report
+        </button>
+    </div>
+    <hr class="dashboard-hr" />
+    <div class="flex-gap-20" style="display: flex; gap: 20px;">
+        <div class="container" id="members-container">
+            {% for member in members %}
+            <div class="member-box" data-user-id="{{ member.user_id }}" style="position: relative;">
+                <div class="member-name">{{ member.first_name[0]|upper }} {{ member.last_name[0]|upper }}</div>
+            </div>
+            {% endfor %}
+            <div class="add-box" onclick="openModal()">+Add New Member</div>
+        </div>
+        <div id="calendar-update-wrapper">
+            <div id="calendar-container">
+                <div>Calendar</div>
+                <hr class="calendar-hr" />
+                <div id="calendar">
+                    <div id="calendar-header">
+                        <button id="prev-month"><</button>
+                        <span id="month-year"></span>
+                        <button id="next-month">></button>
+                    </div>
+                    <table id="calendar-table">
+                        <thead>
+                            <tr>
+                                <th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th>
+                            </tr>
+                        </thead>
+                        <tbody id="calendar-body">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="update-container">
+                <div>Pending Updates</div>
+                <hr class="calendar-hr" />
+                <div id="updates-list">
+                    <!-- Updates will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for index.html form -->
+    <div id="formModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <iframe src="{{ url_for('add_member') }}" class="modal-iframe"></iframe>
+        </div>
+    </div>
+
+<script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+    <script>
+        window.addEventListener('message', (event) => {
+            if (event.data.action === 'refreshUserInfo' && event.data.userId) {
+                const formModal = document.getElementById('formModal');
+                if (formModal) {
+                    const iframe = formModal.querySelector('iframe');
+                    iframe.src = `/user_info?user_id=${event.data.userId}&_ts=${new Date().getTime()}`;
+                    formModal.style.display = 'block';
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>
