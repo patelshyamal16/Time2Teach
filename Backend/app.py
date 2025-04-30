@@ -4,7 +4,7 @@ from Backend.config import app, db, db_path
 from flask_cors import CORS
 from openpyxl.styles import Border, Side
 from openpyxl.utils import get_column_letter
-from models import Course, User, UpdateRequest, DatabaseHandler, db
+from Backend.models import Course, User, UpdateRequest, DatabaseHandler, db
 from flask import send_file, request, render_template, redirect, url_for, jsonify
 from flask_mail import Mail, Message
 import os
