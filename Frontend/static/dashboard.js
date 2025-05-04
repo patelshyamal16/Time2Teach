@@ -237,7 +237,7 @@ nextMonthBtn.addEventListener('click', () => {
 
 renderCalendar(currentDate);
 
-// New event listener for generateReportBtn to send POST request and show alert with message
+// New event listener for generateReportBtn to send POST request and download Excel file
 const generateReportBtn = document.getElementById('generateReportBtn');
 if (generateReportBtn) {
     generateReportBtn.addEventListener('click', () => {
@@ -246,14 +246,21 @@ if (generateReportBtn) {
         })
         .then(response => {
             if (!response.ok) {
-                return response.json().then(err => {
-                    throw new Error(err.error || 'Failed to generate report');
+                return response.text().then(text => {
+                    throw new Error(text || 'Failed to generate report');
                 });
             }
-            return response.json();
+            return response.blob();
         })
-        .then(data => {
-            alert(data.message || 'Report generated successfully');
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Teaching Percentage.xlsx';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
         })
         .catch(error => {
             alert('Failed to generate report: ' + error.message);
@@ -275,18 +282,38 @@ function fetchPendingUpdates() {
             data.forEach(update => {
                 const updateDiv = document.createElement('div');
                 updateDiv.classList.add('update-item');
-                updateDiv.innerHTML = `
-                    <p><strong>${update.user_name}</strong> (${update.created_at})</p>
-                    <p>Course: ${update.course_info || 'N/A'}</p>
-                    <p>Enroll: ${update.enroll || 'N/A'}</p>
-                    <p>Coordinator: ${update.coordinator || 'N/A'}</p>
-                    <p>Clinical Lead: ${update.clinical_lead || 'N/A'}</p>
-                    <p>Clinical APPE: ${update.clinical_appe !== null ? update.clinical_appe : 'N/A'}</p>
-                    <p>Academic APPE: ${update.academic_appe !== null ? update.academic_appe : 'N/A'}</p>
+                let contentHtml = `<p><strong>${update.user_name}</strong> (${update.created_at})</p>`;
+
+                // Determine if this is a course update or APPE update
+                const isCourseUpdate = update.enroll !== null || update.coordinator !== null || update.clinical_lead !== null || update.lecture_faculty !== null || update.lab_design !== null || update.lab_proctor !== null;
+                const isAppeUpdate = update.clinical_appe !== null || update.academic_appe !== null;
+
+                if (isCourseUpdate) {
+                    contentHtml += `
+                        <p>Course: ${update.course_info || 'N/A'}</p>
+                        <p>Enroll: ${update.enroll || 'N/A'}</p>
+                        <p>Coordinator: ${update.coordinator || 'N/A'}</p>
+                        <p>Clinical Lead: ${update.clinical_lead || 'N/A'}</p>
+                        <p>Lecture Faculty: ${update.lecture_faculty !== null ? update.lecture_faculty : 'N/A'}</p>
+                        <p>Lab Design: ${update.lab_design !== null ? update.lab_design : 'N/A'}</p>
+                        <p>Lab Proctor: ${update.lab_proctor !== null ? update.lab_proctor : 'N/A'}</p>
+                    `;
+                }
+
+                if (isAppeUpdate) {
+                    contentHtml = `<p><strong>${update.user_name}</strong> (${update.created_at})</p>
+                        <p>Clinical APPE: ${update.clinical_appe !== null ? update.clinical_appe : 'N/A'}</p>
+                        <p>Academic APPE: ${update.academic_appe !== null ? update.academic_appe : 'N/A'}</p>
+                    `;
+                }
+
+                contentHtml += `
                     <button class="approve-btn" data-id="${update.id}">Approve</button>
                     <button class="reject-btn" data-id="${update.id}">Reject</button>
                     <hr/>
                 `;
+
+                updateDiv.innerHTML = contentHtml;
                 updatesList.appendChild(updateDiv);
             });
 

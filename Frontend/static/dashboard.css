@@ -78,7 +78,7 @@ hr.dashboard-hr{
     border-radius: 12px;
     box-shadow: 0 0 10px rgba(0,0,0,0.15);
     max-width: 75%;
-    max-height: 600px;
+    height: 600px;
     margin: auto;
     margin-top: 20px;
     display: flex;
@@ -240,7 +240,7 @@ hr.dashboard-hr{
     border-radius: 8px;
     padding: 10px 10px;
     width: 500px;
-    max-height: 640px;
+    height: 640px;
     margin-top: 20px;
     margin-bottom: 20px;
     background-color: white;
@@ -253,10 +253,11 @@ hr.dashboard-hr{
 #update-container{
     box-shadow: 0 0 10px rgba(0,0,0,0.15);
     border-radius: 8px;
-    padding: 10px 15px;
+    padding: 10px 10px;
     width: auto;
     height: auto;
-    max-height: 40%;
+    max-width: 90%;
+    max-height: 60%;
     background-color: #f9f9f9;
     display: flex;
     align-items: center;
@@ -279,9 +280,9 @@ hr.dashboard-hr{
     box-shadow: 0 0 10px rgba(0,0,0,0.15);
     border-radius: 8px;
     padding: 10px 15px;
-    width: auto;
-    height: auto;
-    margin-bottom: 50px;
+    width: 90%;
+    height: 40%;
+    margin-bottom: 20px;
     background-color: #f9f9f9;
     display: flex;
     flex-direction: column;
@@ -290,7 +291,7 @@ hr.dashboard-hr{
 }
 
 #calendar-container > div:first-child {
-    width: auto;
+    width: 100%;
     text-align: center;
     font-weight: bold;
     font-size: 2rem;
@@ -310,7 +311,7 @@ hr.calendar-hr {
 }
 
 #calendar-header {
-    width: auto;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;

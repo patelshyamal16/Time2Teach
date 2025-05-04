@@ -82,6 +82,15 @@
                     <option value="N">N</option>
                     <option value="NA">NA</option>
                 </select>
+
+                <label for="lecture_faculty_{{ course.course_id }}">Lecture Faculty (integer):</label>
+                <input type="number" name="lecture_faculty_{{ course.course_id }}" id="lecture_faculty_{{ course.course_id }}" min="0" step="1" required>
+
+                <label for="lab_design_{{ course.course_id }}">Lab Design (float):</label>
+                <input type="number" name="lab_design_{{ course.course_id }}" id="lab_design_{{ course.course_id }}" min="0" step="0.01" required>
+
+                <label for="lab_proctor_{{ course.course_id }}">Lab Proctor (float):</label>
+                <input type="number" name="lab_proctor_{{ course.course_id }}" id="lab_proctor_{{ course.course_id }}" min="0" step="0.01" required>
             </div>
             {% endfor %}
 
