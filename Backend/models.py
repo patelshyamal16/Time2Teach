@@ -1,7 +1,5 @@
 import sqlite3
-import pandas as pd
 from Backend.config import db, db_path
-from datetime import datetime, date
 
 class User(db.Model):
     __tablename__ = 'user'
@@ -22,16 +20,16 @@ class Course(db.Model):
     __tablename__ = 'course'
     course_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     course_name = db.Column(db.String(100), nullable=False)
-    enroll = db.Column(db.String(2), nullable=False)
-    didactic_credit = db.Column(db.Float, nullable=False)
-    lab_credit = db.Column(db.Float, nullable=False)
-    coordinator = db.Column(db.String(2), nullable=False)
-    clinical_lead = db.Column(db.String(2), nullable=False)
-    lecture_total = db.Column(db.Integer, nullable=False)
-    lab_total = db.Column(db.Float, nullable=False)
-    lecture_faculty = db.Column(db.Integer, nullable=False)
-    lab_design = db.Column(db.Float, nullable=False)
-    lab_proctor = db.Column(db.Float, nullable=False)
+    enroll = db.Column(db.String(2), nullable=False, default= 'N')
+    didactic_credit = db.Column(db.Float, nullable=False, default=0)
+    lab_credit = db.Column(db.Float, nullable=False, default=0)
+    coordinator = db.Column(db.String(2), nullable=False, default='N')
+    clinical_lead = db.Column(db.String(2), nullable=False, default= 'N')
+    lecture_total = db.Column(db.Integer, nullable=False, default=0)
+    lab_total = db.Column(db.Float, nullable=False, default=0)
+    lecture_faculty = db.Column(db.Integer, nullable=False, default=0)
+    lab_design = db.Column(db.Float, nullable=False, default=0)
+    lab_proctor = db.Column(db.Float, nullable=False, default=0)
     total = db.Column(db.Float, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
 
@@ -45,6 +43,9 @@ class UpdateRequest(db.Model):
     clinical_lead = db.Column(db.String(3))
     clinical_appe = db.Column(db.Integer)
     academic_appe = db.Column(db.Integer)
+    lecture_faculty = db.Column(db.Integer)
+    lab_design = db.Column(db.Float)
+    lab_proctor = db.Column(db.Float)
     status = db.Column(db.String(20), default='pending')
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     
@@ -113,6 +114,9 @@ class DatabaseHandler:
                 clinical_lead TEXT,
                 clinical_appe INTEGER,
                 academic_appe INTEGER,
+                lecture_faculty INTEGER,
+                lab_design DOUBLE,
+                lab_proctor DOUBLE,
                 status TEXT DEFAULT 'pending',
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (user_id) REFERENCES user(user_id),

@@ -1,13 +1,15 @@
 import os
+import io
 import pandas as pd
-from Backend.config import app, db, db_path
+from flask import session
 from flask_cors import CORS
-from openpyxl.styles import Border, Side
-from openpyxl.utils import get_column_letter
-from Backend.models import Course, User, UpdateRequest, DatabaseHandler, db
-from flask import send_file, request, render_template, redirect, url_for, jsonify
 from flask_mail import Mail, Message
-import os
+from openpyxl.styles import Border, Side
+from Backend.config import app, db, db_path
+from openpyxl.utils import get_column_letter
+from Backend.models import Course, User, UpdateRequest, DatabaseHandler
+from flask import send_file, request, render_template, redirect, url_for, jsonify
+
 
 CORS(app)  # Enable CORS for all routes
 
@@ -19,8 +21,6 @@ app.config['MAIL_USE_SSL'] = False
 app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME', 'patelshyamal16@gmail.com')
 app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD', 'eplt yzca osub mady')
 mail = Mail(app)
-
-from flask import session, flash
 
 @app.route("/", methods=["GET", "POST"])
 def home():
@@ -100,16 +100,16 @@ def submit_course():
         return "User not found", 400
 
     course_name = request.form.get("course_name")
-    enroll = request.form.get("enroll")  # 'Y' or 'N'
+    enroll = request.form.get("enroll", 'N')  # 'Y' or 'N'
     didactic_credit = float(request.form.get("didactic_credit", 0))
     lab_credit = float(request.form.get("lab_credit", 0))
-    coordinator = request.form.get("coordinator")  # 'Y' or 'N'
-    clinical_lead = request.form.get("clinical_lead")  # 'Y' or 'N' or 'NA'
-    lecture_total = int(request.form.get("lecture_total", 0))
-    lab_total = float(request.form.get("lab_total", 0))
-    lecture_faculty = int(request.form.get("lecture_faculty", 0))
-    lab_design = float(request.form.get("lab_design", 0))
-    lab_proctor = float(request.form.get("lab_proctor", 0))
+    coordinator = request.form.get("coordinator", 'N')  # 'Y' or 'N'
+    clinical_lead = request.form.get("clinical_lead", 'N')  # 'Y' or 'N' or 'NA'
+    lecture_total = int(request.form.get("lecture_total") or 0)
+    lab_total = float(request.form.get("lab_total") or 0)
+    lecture_faculty = int(request.form.get("lecture_faculty") or 0)
+    lab_design = float(request.form.get("lab_design") or 0)
+    lab_proctor = float(request.form.get("lab_proctor") or 0)
 
     if enroll and enroll.upper() == "Y":
         part1 = didactic_credit if coordinator and coordinator.upper() == "Y" else 0
@@ -324,6 +324,8 @@ def delete_user(user_id):
     return {"message": "User and their courses deleted successfully"}, 200
 
 
+
+
 @app.route('/generate_report', methods=['GET', 'POST'])
 def generate_report():
     if request.method == 'POST':
@@ -391,23 +393,9 @@ def generate_report():
             }
             df_reference = pd.DataFrame(reference_data)
 
-            # Create Excel file with two sheets
-            # Get the base directory where this script is located
-            BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-            # Define reports directory relative to Backend/config.py
-            reports_dir = os.path.join(BASE_DIR, '..', 'Frontend', 'Reports')
-
-            # Ensure the directory exists
-            print(f"Reports directory path: {os.path.abspath(reports_dir)}")
-            if not os.path.exists(reports_dir):
-                os.makedirs(reports_dir)
-
-            # Build full report file path
-            report_path = os.path.join(reports_dir, 'Teaching Percentage.xlsx')
-            print(f"Report file path: {os.path.abspath(report_path)}")
-
-            with pd.ExcelWriter(report_path, engine='openpyxl') as writer:
+            # Create Excel file in memory with two sheets
+            output = io.BytesIO()
+            with pd.ExcelWriter(output, engine='openpyxl') as writer:
                 df_courses.to_excel(writer, sheet_name='Courses', index=False)
 
                 # Write first summary table
@@ -498,8 +486,8 @@ def generate_report():
                 auto_adjust_column_width(ws_courses)
                 auto_adjust_column_width(ws_summary)
 
-
-            return jsonify({'message': 'Report generated successfully', 'path': report_path})
+            output.seek(0)
+            return send_file(output, as_attachment=True, download_name='Teaching Percentage.xlsx', mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 
         except Exception as e:
             import traceback
@@ -507,15 +495,15 @@ def generate_report():
             print(error_message)
             return jsonify({'error': error_message}), 500
 
-    else:  # GET method to download the file
-        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-        reports_dir = os.path.join(BASE_DIR, '..', 'Frontend', 'Reports')
-        os.makedirs(reports_dir, exist_ok=True)
+    # else:  # GET method to download the file
+    #     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    #     reports_dir = os.path.join(BASE_DIR, '..', 'Frontend', 'Reports')
+    #     os.makedirs(reports_dir, exist_ok=True)
 
-        report_path = os.path.join(reports_dir, 'Teaching Percentage.xlsx')
-        if not os.path.exists(report_path):
-            return "Report not found", 404
-        return send_file(report_path, as_attachment=True, download_name='Teaching Percentage.xlsx')
+    #     report_path = os.path.join(reports_dir, 'Teaching Percentage.xlsx')
+    #     if not os.path.exists(report_path):
+    #         return "Report not found", 404
+    #     return send_file(report_path, as_attachment=True, download_name='Teaching Percentage.xlsx')
 
 
 # Route to send survey email with link
@@ -585,13 +573,19 @@ def submit_survey(user_id):
         enroll = data.get(f'enroll_{course.course_id}')
         coordinator = data.get(f'coordinator_{course.course_id}')
         clinical_lead = data.get(f'clinical_lead_{course.course_id}')
-        if enroll or coordinator or clinical_lead:
+        lecture_faculty = data.get(f'lecture_faculty_{course.course_id}', type=int)
+        lab_design = data.get(f'lab_design_{course.course_id}', type=float)
+        lab_proctor = data.get(f'lab_proctor_{course.course_id}', type=float)
+        if enroll or coordinator or clinical_lead or lecture_faculty or lab_design or lab_proctor:
             update_request = UpdateRequest(
                 user_id=user_id,
                 course_id=course.course_id,
                 enroll=enroll,
                 coordinator=coordinator,
                 clinical_lead=clinical_lead,
+                lecture_faculty=lecture_faculty,
+                lab_design=lab_design,
+                lab_proctor=lab_proctor,
                 status='pending'
             )
             db.session.add(update_request)
@@ -652,6 +646,9 @@ def pending_updates():
             'enroll': update.enroll,
             'coordinator': update.coordinator,
             'clinical_lead': update.clinical_lead,
+            'lecture_faculty': update.lecture_faculty,
+            'lab_design': update.lab_design,
+            'lab_proctor': update.lab_proctor,
             'clinical_appe': update.clinical_appe,
             'academic_appe': update.academic_appe,
             'created_at': update.created_at.strftime('%Y-%m-%d %H:%M:%S')
@@ -672,7 +669,7 @@ def update_request_action(update_id):
             return jsonify({'error': 'User not found'}), 404
         # Update user fields based on update_request
         # Since enroll, coordinator, clinical_lead are course related, update only the specific course related to the update_request
-        if update_request.enroll is not None or update_request.coordinator is not None or update_request.clinical_lead is not None:
+        if update_request.enroll is not None or update_request.coordinator is not None or update_request.clinical_lead is not None or update_request.lecture_faculty is not None or update_request.lab_design is not None or update_request.lab_proctor is not None:
             if update_request.course_id:
                 course = Course.query.get(update_request.course_id)
                 if course:
@@ -682,6 +679,12 @@ def update_request_action(update_id):
                         course.coordinator = update_request.coordinator
                     if update_request.clinical_lead is not None:
                         course.clinical_lead = update_request.clinical_lead
+                    if update_request.lecture_faculty is not None:
+                        course.lecture_faculty = update_request.lecture_faculty
+                    if update_request.lab_design is not None:
+                        course.lab_design = update_request.lab_design
+                    if update_request.lab_proctor is not None:
+                        course.lab_proctor = update_request.lab_proctor
 
                     # Recalculate total for the course using provided logic
                     enroll = course.enroll
@@ -724,6 +727,12 @@ def update_request_action(update_id):
                         course.coordinator = update_request.coordinator
                     if update_request.clinical_lead is not None:
                         course.clinical_lead = update_request.clinical_lead
+                    if update_request.lecture_faculty is not None:
+                        course.lecture_faculty = update_request.lecture_faculty
+                    if update_request.lab_design is not None:
+                        course.lab_design = update_request.lab_design
+                    if update_request.lab_proctor is not None:
+                        course.lab_proctor = update_request.lab_proctor
 
                     # Recalculate total for each course using provided logic
                     enroll = course.enroll
