@@ -10,7 +10,6 @@ from openpyxl.utils import get_column_letter
 from Backend.models import Course, User, UpdateRequest, DatabaseHandler
 from flask import send_file, request, render_template, redirect, url_for, jsonify
 
-
 CORS(app)  # Enable CORS for all routes
 
 # Configure Flask-Mail

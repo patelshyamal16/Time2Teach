@@ -3,7 +3,6 @@ from flask_cors import CORS
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
-# Use fixed absolute paths for database and frontend folders
 # Get the base directory (i.e., the folder where config.py lives)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
