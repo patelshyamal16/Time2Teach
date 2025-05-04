@@ -505,7 +505,6 @@ def generate_report():
     #         return "Report not found", 404
     #     return send_file(report_path, as_attachment=True, download_name='Teaching Percentage.xlsx')
 
-
 # Route to send survey email with link
 @app.route('/send_survey_email/<int:user_id>', methods=['POST'])
 def send_survey_email(user_id):

@@ -27,4 +27,3 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Disable modification tra
 
 # Initialize SQLAlchemy
 db = SQLAlchemy(app)
-
