@@ -1,5 +1,5 @@
 import sqlite3
-from config import db, db_path
+from Backend.config import db, db_path
 
 class User(db.Model):
     __tablename__ = 'user'

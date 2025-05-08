@@ -5,9 +5,9 @@ from flask import session
 from flask_cors import CORS
 from flask_mail import Mail, Message
 from openpyxl.styles import Border, Side
-from config import app, db, db_path
+from Backend.config import app, db, db_path
 from openpyxl.utils import get_column_letter
-from models import Course, User, UpdateRequest, DatabaseHandler
+from Backend.models import Course, User, UpdateRequest, DatabaseHandler
 from flask import send_file, request, render_template, redirect, url_for, jsonify
 
 CORS(app)  # Enable CORS for all routes
