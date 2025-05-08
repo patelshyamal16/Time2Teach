@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Animation - Time2Teach</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='ClockAnimation.css') }}" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+</head>
+<body>
+    <div class="clock-container">
+        <div class="side-text left" id="timeText">TIME</div>
+        <div class="side-text right" id="teachText">TEACH</div>
+
+        <div class="clock" id="clock">
+            <div class="clock-face" id="clockFace"></div>
+            <div class="hand hour" id="hourHand"></div>
+            <div class="hand minute" id="minuteHand"></div>
+            <div class="hand second" id="secondHand"></div>
+            <div class="center-dot" id="centerDot"></div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='ClockAnimation.js') }}"></script>
+</body>
+</html>

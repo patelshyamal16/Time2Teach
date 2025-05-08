@@ -5,9 +5,9 @@ from flask import session
 from flask_cors import CORS
 from flask_mail import Mail, Message
 from openpyxl.styles import Border, Side
-from Backend.config import app, db, db_path
+from config import app, db, db_path
 from openpyxl.utils import get_column_letter
-from Backend.models import Course, User, UpdateRequest, DatabaseHandler
+from models import Course, User, UpdateRequest, DatabaseHandler
 from flask import send_file, request, render_template, redirect, url_for, jsonify
 
 CORS(app)  # Enable CORS for all routes
@@ -29,16 +29,28 @@ def home():
         correct_password = os.environ.get("DASHBOARD_PASSWORD", "admin123")
         if password == correct_password:
             session['logged_in'] = True
-            return redirect(url_for('home'))
+            return redirect(url_for('animation'))
         else:
             error = "Invalid password. Please try again."
             return render_template("login.html", error=error, login_type='dashboard')
     else:
         if session.get('logged_in'):
-            users = User.query.all()
-            return render_template("dashboard.html", members=users)
+            return redirect(url_for('home_dashboard'))
         else:
             return render_template("login.html", login_type='dashboard')
+
+@app.route("/dashboard")
+def home_dashboard():
+    if not session.get('logged_in'):
+        return redirect(url_for('home'))
+    users = User.query.all()
+    return render_template("dashboard.html", members=users)
+
+@app.route("/animation")
+def animation():
+    if not session.get('logged_in'):
+        return redirect(url_for('home'))
+    return render_template("animation.html")
 
 @app.route("/add_member")
 def add_member():

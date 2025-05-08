@@ -3,29 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 50px;
-        }
-        .login-container {
-            max-width: 300px;
-            margin: auto;
-        }
         .error {
             color: red;
             margin-bottom: 10px;
         }
-        input[type="password"], input[type="submit"] {
-            width: 100%;
-            padding: 8px;
-            margin: 6px 0;
-            box-sizing: border-box;
-        }
     </style>
 </head>
 <body>
-    <div class="login-container">
+    <div class="container">
         {% if login_type == 'dashboard' %}
             <h2>Please enter password to access dashboard</h2>
             <form method="post" action="/">
